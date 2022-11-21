@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import flask
-from flask import Flask, request
+from flask import Flask, request, redirect, Response
 from flask_sockets import Sockets
 import gevent
 from gevent import queue
@@ -69,19 +69,29 @@ myWorld.add_set_listener( set_listener )
 @app.route('/')
 def hello():
     '''Return something coherent here.. perhaps redirect to /static/index.html '''
-    return None
+    # return None
+    print("Homepage")
+    return redirect("/static/index.html")
 
 def read_ws(ws,client):
     '''A greenlet function that reads from the websocket and updates the world'''
     # XXX: TODO IMPLEMENT ME
     return None
 
-@sockets.route('/subscribe')
+@sockets.route('/subscribe') 
 def subscribe_socket(ws):
     '''Fufill the websocket URL of /subscribe, every update notify the
        websocket and read updates from the websocket '''
     # XXX: TODO IMPLEMENT ME
-    return None
+    # client = Client()
+    print("Testing...")
+    socket_queue = queue.Queue() # Referenced from CMPUT404 GitHub Page (the Client class)
+    myWorld.listeners.append(socket_queue)
+    g = gevent.spawn( read_ws, ws, socket_queue )    
+    print("Subscribing")
+    print("Finished testing...")
+    
+    return Response(json.dumps(myWorld.world), status=200, mimetype='application/json')
 
 
 # I give this to you, this is how you get the raw body/data portion of a post in flask
