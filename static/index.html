@@ -125,6 +125,7 @@ function addEntity(entity, data) {
     world[entity] = data;
     drawNextFrame(); // (but should we?)
     //XXX: Send a XHTML Request that updates the entity you just modified!
+    socket.send(JSON.stringify(data))
 }
 var counter = 0;
 function addEntityWithoutName(data) {
@@ -255,6 +256,7 @@ function wsSetup() {
     socket.onopen = function() {
         //XXX: TODO What are you going to do here?
         // console.log("Trying to connect to websocket")
+        console.log("Succesfully connected to websocket")
     };
     socket.onerror = function(msg) {
         debug("WebSocket Error:" + msg.data);
@@ -267,6 +269,8 @@ function wsSetup() {
             
             // Referenced from CMPUT404 GitHub
             var message = JSON.parse(msg.data);
+            console.log("Receiving messages...")
+            console.log(message)
                     
         } catch (e) {
             alert("socket on message: " + e);

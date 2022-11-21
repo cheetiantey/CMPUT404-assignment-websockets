@@ -61,6 +61,17 @@ class World:
 
 myWorld = World()        
 
+# Referenced from CMPUT404 GitHub Page
+def send_all(msg):
+    for client in myWorld.listeners:
+        print("Hey")
+        client.put_nowait(msg)
+        print("Hello")
+
+# Referenced from CMPUT404 GitHub Page
+def send_all_json(obj):
+    send_all( json.dumps(obj) )
+
 def set_listener( entity, data ):
     ''' do something with the update ! '''
 
@@ -76,7 +87,22 @@ def hello():
 def read_ws(ws,client):
     '''A greenlet function that reads from the websocket and updates the world'''
     # XXX: TODO IMPLEMENT ME
-    return None
+    # return None
+    
+    # Referenced from CMPUT404 GitHub Page
+    try:
+        while True:
+            msg = ws.receive()
+            print("WS RECV: %s" % msg)
+            if (msg is not None):
+                packet = json.loads(msg)
+                print("Packet is: ", packet)
+                print("myWorld.listeners: ", myWorld.listeners)
+                send_all_json( packet )
+            else:
+                break
+    except:
+        '''Done'''
 
 @sockets.route('/subscribe') 
 def subscribe_socket(ws):
@@ -91,7 +117,18 @@ def subscribe_socket(ws):
     print("Subscribing")
     print("Finished testing...")
     
-    return Response(json.dumps(myWorld.world), status=200, mimetype='application/json')
+    try:
+        while True:
+            # block here
+            msg = socket_queue.get()
+            print("Sending messages...")
+            ws.send(msg)
+    except Exception as e:# WebSocketError as e:
+        print("WS Error %s" % e)
+    finally:
+        myWorld.remove(socket_queue)
+        gevent.kill(g)
+
 
 
 # I give this to you, this is how you get the raw body/data portion of a post in flask
