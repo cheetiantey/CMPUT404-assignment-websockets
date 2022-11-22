@@ -42,9 +42,9 @@ class World:
         self.update_listeners( entity )
 
     def set(self, entity, data):
-        print("testing1")
+        # print("testing1")
         self.space[entity] = data
-        print("testing2")
+        # print("testing2")
         # self.update_listeners( entity )
 
     def update_listeners(self, entity):
@@ -67,18 +67,18 @@ myWorld = World()
 def send_all(msg):
     for client in myWorld.listeners:
         if isinstance(client, queue.Queue):
-            print("Hey")
+            # print("Hey")
             # client.put_nowait(msg) 
             # client.put_nowait(json.dumps(myWorld.world))
-            print("non json.dumps is: ", myWorld.space)
-            print("client.put_nowait is: ", json.dumps(myWorld.space))
+            # print("non json.dumps is: ", myWorld.space)
+            # print("client.put_nowait is: ", json.dumps(myWorld.space))
             client.put_nowait(json.dumps(myWorld.space))
-            print("Hello")
+            # print("Hello")
 
 # Referenced from CMPUT404 GitHub Page
 def send_all_json(obj):
-    print("obj is: ", obj)
-    print("json.dumps(obj) is: ", json.dumps(obj))
+    # print("obj is: ", obj)
+    # print("json.dumps(obj) is: ", json.dumps(obj))
     send_all( json.dumps(obj) )
 
 def set_listener( entity, data ):
@@ -90,7 +90,7 @@ myWorld.add_set_listener( set_listener )
 def hello():
     '''Return something coherent here.. perhaps redirect to /static/index.html '''
     # return None
-    print("Homepage")
+    # print("Homepage")
     return redirect("/static/index.html")
 
 def read_ws(ws,client):
@@ -102,18 +102,18 @@ def read_ws(ws,client):
     try:
         while True:
             msg = ws.receive()
-            print("WS RECV: %s" % msg)
+            # print("WS RECV: %s" % msg)
             if (msg is not None):
                 msg = json.loads(msg)
                 entity = msg[0]
-                print("entity is, ", entity)
+                # print("entity is, ", entity)
                 # packet = json.loads(msg[1])
                 packet = msg[1]
-                print("Packet is: ", packet)
-                print("myWorld.listeners: ", myWorld.listeners)
+                # print("Packet is: ", packet)
+                # print("myWorld.listeners: ", myWorld.listeners)
                 # for queue in client:
                 #     pass
-                print("myworld.space is: ", myWorld.space)
+                # print("myworld.space is: ", myWorld.space)
                 myWorld.set(entity, packet)
                 # send_all_json( myWorld.space )
                 send_all_json(packet)
@@ -128,18 +128,18 @@ def subscribe_socket(ws):
        websocket and read updates from the websocket '''
     # XXX: TODO IMPLEMENT ME
     # client = Client()
-    print("Testing...")
+    # print("Testing...")
     socket_queue = queue.Queue() # Referenced from CMPUT404 GitHub Page (the Client class)
     myWorld.listeners.append(socket_queue)
     g = gevent.spawn( read_ws, ws, socket_queue )    
-    print("Subscribing")
-    print("Finished testing...")
+    # print("Subscribing")
+    # print("Finished testing...")
     
     try:
         while True:
             # block here
             msg = socket_queue.get()
-            print("Sending messages...")
+            # print("Sending messages...")
             ws.send(msg)
     except Exception as e:# WebSocketError as e:
         print("WS Error %s" % e)

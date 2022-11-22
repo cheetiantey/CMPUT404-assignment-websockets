@@ -271,9 +271,10 @@ function wsSetup() {
             debug("WebSocket Recv:" + msg.data);
             //XXX: TODO What are you going to do here?   
             
-            console.log(`msg.data is: ${msg.data}`)
+            // console.log(`msg.data is: ${msg.data}`)
             var message = JSON.parse(msg.data);
             // Referenced from CMPUT404 GitHub
+            world = {}
             for (let key in message) {
                 clearFrame()
                 world[key] = message[key]
