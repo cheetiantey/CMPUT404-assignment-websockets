@@ -126,9 +126,10 @@ function addEntity(entity, data) {
     drawNextFrame(); // (but should we?)
     //XXX: Send a XHTML Request that updates the entity you just modified!
     // socket.send([entity, JSON.stringify(data)])
-    const payload = []
-    payload.push(entity)
-    payload.push(data)
+    
+    // Referenced from https://stackoverflow.com/questions/11508463/javascript-set-object-key-by-variable#:~:text=You%20need%20to%20make%20the,push(obj)%3B
+    var payload = {};
+    payload[entity] = data;
     socket.send(JSON.stringify(payload))
 }
 var counter = 0;

@@ -104,19 +104,31 @@ def read_ws(ws,client):
             msg = ws.receive()
             # print("WS RECV: %s" % msg)
             if (msg is not None):
+                print("received sth...")
+                print("msg is: ", msg)
                 msg = json.loads(msg)
-                entity = msg[0]
-                # print("entity is, ", entity)
-                # packet = json.loads(msg[1])
-                packet = msg[1]
-                # print("Packet is: ", packet)
-                # print("myWorld.listeners: ", myWorld.listeners)
-                # for queue in client:
-                #     pass
-                # print("myworld.space is: ", myWorld.space)
+                print("msg after json.loads() is: ", msg)
+                for key, val in msg.items():
+                    entity = key
+                    packet = val
                 myWorld.set(entity, packet)
-                # send_all_json( myWorld.space )
-                send_all_json(packet)
+                for client in myWorld.listeners:
+                    if isinstance(client, queue.Queue):
+                        client.put_nowait(json.dumps(myWorld.space))   
+
+                # msg = json.loads(msg)
+                # entity = msg[0]
+                # # print("entity is, ", entity)
+                # # packet = json.loads(msg[1])
+                # packet = msg[1]
+                # # print("Packet is: ", packet)
+                # # print("myWorld.listeners: ", myWorld.listeners)
+                # # for queue in client:
+                # #     pass
+                # # print("myworld.space is: ", myWorld.space)
+                # myWorld.set(entity, packet)
+                # # send_all_json( myWorld.space )
+                # send_all_json(packet)
             else:
                 break
     except:
@@ -138,6 +150,7 @@ def subscribe_socket(ws):
     try:
         while True:
             # block here
+            print("while TRUE...")
             msg = socket_queue.get()
             # print("Sending messages...")
             ws.send(msg)
