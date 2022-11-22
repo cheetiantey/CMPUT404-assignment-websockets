@@ -64,12 +64,15 @@ myWorld = World()
 # Referenced from CMPUT404 GitHub Page
 def send_all(msg):
     for client in myWorld.listeners:
-        print("Hey")
-        client.put_nowait(msg)
-        print("Hello")
+        if isinstance(client, queue.Queue):
+            print("Hey")
+            client.put_nowait(msg)
+            print("Hello")
 
 # Referenced from CMPUT404 GitHub Page
 def send_all_json(obj):
+    print("obj is: ", obj)
+    print("json.dumps(obj) is: ", json.dumps(obj))
     send_all( json.dumps(obj) )
 
 def set_listener( entity, data ):
@@ -98,6 +101,8 @@ def read_ws(ws,client):
                 packet = json.loads(msg)
                 print("Packet is: ", packet)
                 print("myWorld.listeners: ", myWorld.listeners)
+                # for queue in client:
+                #     pass
                 send_all_json( packet )
             else:
                 break

@@ -271,6 +271,7 @@ function wsSetup() {
             var message = JSON.parse(msg.data);
             console.log("Receiving messages...")
             console.log(message)
+            drawCircle(context, message)
                     
         } catch (e) {
             alert("socket on message: " + e);
