@@ -42,8 +42,10 @@ class World:
         self.update_listeners( entity )
 
     def set(self, entity, data):
+        print("testing1")
         self.space[entity] = data
-        self.update_listeners( entity )
+        print("testing2")
+        # self.update_listeners( entity )
 
     def update_listeners(self, entity):
         '''update the set listeners'''
@@ -66,7 +68,11 @@ def send_all(msg):
     for client in myWorld.listeners:
         if isinstance(client, queue.Queue):
             print("Hey")
-            client.put_nowait(msg)
+            # client.put_nowait(msg) 
+            # client.put_nowait(json.dumps(myWorld.world))
+            print("non json.dumps is: ", myWorld.space)
+            print("client.put_nowait is: ", json.dumps(myWorld.space))
+            client.put_nowait(json.dumps(myWorld.space))
             print("Hello")
 
 # Referenced from CMPUT404 GitHub Page
@@ -98,12 +104,19 @@ def read_ws(ws,client):
             msg = ws.receive()
             print("WS RECV: %s" % msg)
             if (msg is not None):
-                packet = json.loads(msg)
+                msg = json.loads(msg)
+                entity = msg[0]
+                print("entity is, ", entity)
+                # packet = json.loads(msg[1])
+                packet = msg[1]
                 print("Packet is: ", packet)
                 print("myWorld.listeners: ", myWorld.listeners)
                 # for queue in client:
                 #     pass
-                send_all_json( packet )
+                print("myworld.space is: ", myWorld.space)
+                myWorld.set(entity, packet)
+                # send_all_json( myWorld.space )
+                send_all_json(packet)
             else:
                 break
     except:
@@ -131,7 +144,7 @@ def subscribe_socket(ws):
     except Exception as e:# WebSocketError as e:
         print("WS Error %s" % e)
     finally:
-        myWorld.remove(socket_queue)
+        myWorld.listeners.remove(socket_queue)
         gevent.kill(g)
 
 
@@ -161,7 +174,9 @@ def world():
 @app.route("/entity/<entity>")    
 def get_entity(entity):
     '''This is the GET version of the entity interface, return a representation of the entity'''
-    return None
+    # return None
+    myWorld.clear()
+    return Response(json.dumps(myWorld.space), status=200, mimetype='application/json')
 
 
 @app.route("/clear", methods=['POST','GET'])

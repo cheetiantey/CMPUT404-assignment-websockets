@@ -38,7 +38,7 @@ var socket;
 
 function debug(str) {
     var debugDiv = document.getElementById('debug');
-    debugDiv.innerHTML = "" + str;
+    // debugDiv.innerHTML = "" + str;
 }
 debug("Test");
 
@@ -125,7 +125,11 @@ function addEntity(entity, data) {
     world[entity] = data;
     drawNextFrame(); // (but should we?)
     //XXX: Send a XHTML Request that updates the entity you just modified!
-    socket.send(JSON.stringify(data))
+    // socket.send([entity, JSON.stringify(data)])
+    const payload = []
+    payload.push(entity)
+    payload.push(data)
+    socket.send(JSON.stringify(payload))
 }
 var counter = 0;
 function addEntityWithoutName(data) {
@@ -267,11 +271,21 @@ function wsSetup() {
             debug("WebSocket Recv:" + msg.data);
             //XXX: TODO What are you going to do here?   
             
-            // Referenced from CMPUT404 GitHub
+            console.log(`msg.data is: ${msg.data}`)
             var message = JSON.parse(msg.data);
-            console.log("Receiving messages...")
-            console.log(message)
-            drawCircle(context, message)
+            // Referenced from CMPUT404 GitHub
+            for (let key in message) {
+                clearFrame()
+                world[key] = message[key]
+                // console.log("Start")
+                // console.log(world[key])
+                // console.log("End")
+            }
+            renderFrame()
+            // console.log(`message is: ${message}`)
+            // console.log("Receiving messages...")
+            // console.log(message)
+            // drawCircle(context, message)
                     
         } catch (e) {
             alert("socket on message: " + e);
