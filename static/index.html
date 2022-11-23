@@ -275,7 +275,7 @@ function wsSetup() {
             // console.log(`msg.data is: ${msg.data}`)
             var message = JSON.parse(msg.data);
             // Referenced from CMPUT404 GitHub
-            world = {}
+            // world = {}
             for (let key in message) {
                 clearFrame()
                 world[key] = message[key]

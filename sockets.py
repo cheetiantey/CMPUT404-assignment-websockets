@@ -104,17 +104,18 @@ def read_ws(ws,client):
             msg = ws.receive()
             # print("WS RECV: %s" % msg)
             if (msg is not None):
-                print("received sth...")
-                print("msg is: ", msg)
+                # print("received sth...")
+                # print("msg is: ", msg)
                 msg = json.loads(msg)
-                print("msg after json.loads() is: ", msg)
+                # print("msg after json.loads() is: ", msg)
                 for key, val in msg.items():
                     entity = key
                     packet = val
                 myWorld.set(entity, packet)
                 for client in myWorld.listeners:
                     if isinstance(client, queue.Queue):
-                        client.put_nowait(json.dumps(myWorld.space))   
+                        # client.put_nowait(json.dumps(myWorld.space))   
+                        client.put_nowait(json.dumps({entity: packet}))   
 
                 # msg = json.loads(msg)
                 # entity = msg[0]
@@ -150,7 +151,7 @@ def subscribe_socket(ws):
     try:
         while True:
             # block here
-            print("while TRUE...")
+            # print("while TRUE...")
             msg = socket_queue.get()
             # print("Sending messages...")
             ws.send(msg)
