@@ -260,7 +260,6 @@ function wsSetup() {
     socket = new WebSocket(url);
     socket.onopen = function() {
         //XXX: TODO What are you going to do here?
-        // console.log("Trying to connect to websocket")
         console.log("Succesfully connected to websocket")
     };
     socket.onerror = function(msg) {
@@ -271,23 +270,13 @@ function wsSetup() {
         try {
             debug("WebSocket Recv:" + msg.data);
             //XXX: TODO What are you going to do here?   
-            
-            // console.log(`msg.data is: ${msg.data}`)
             var message = JSON.parse(msg.data);
             // Referenced from CMPUT404 GitHub
-            // world = {}
             for (let key in message) {
                 clearFrame()
                 world[key] = message[key]
-                // console.log("Start")
-                // console.log(world[key])
-                // console.log("End")
             }
             renderFrame()
-            // console.log(`message is: ${message}`)
-            // console.log("Receiving messages...")
-            // console.log(message)
-            // drawCircle(context, message)
                     
         } catch (e) {
             alert("socket on message: " + e);
