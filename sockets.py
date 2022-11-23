@@ -188,15 +188,15 @@ def world():
 @app.route("/entity/<entity>")    
 def get_entity(entity):
     '''This is the GET version of the entity interface, return a representation of the entity'''
-    # return None
-    myWorld.clear()
-    return Response(json.dumps(myWorld.space), status=200, mimetype='application/json')
+    return None
 
 
 @app.route("/clear", methods=['POST','GET'])
 def clear():
     '''Clear the world out!'''
-    return None
+    # return None
+    myWorld.clear()
+    return Response(json.dumps(myWorld.space), status=200, mimetype='application/json')
 
 
 

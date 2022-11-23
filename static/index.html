@@ -22,7 +22,7 @@
     "/>
     <script src="json2.js"></script>
   </head> 
-  <body bgcolor="white" height="100%" width="100%"> 
+  <body bgcolor="#D291BC" height="100%" width="100%"> 
     <div id="debug"></div>
     <canvas id="c" width="100%" height="100%" style="-webkit-tap-highlight-color: transparent;"></canvas> 
 
@@ -48,7 +48,7 @@ world = {};
 function drawCircle(context,entity) {
     with(context) {
         beginPath();                
-        lineWidth = 3;
+        lineWidth = 5;
         var x = entity["x"];
         var y = entity["y"];
         //moveTo(x,y);
@@ -72,7 +72,7 @@ function prepEntity(entity) {
 function clearFrame() {
     with(context) {
 	moveTo(0,0);
-	fillStyle = "#000";
+	fillStyle = "#FEC8D8";
 	fillRect(0,0,W,H);
     }
 
@@ -237,16 +237,16 @@ mouse = (function() {
 // Add the application specific mouse listeners!
 //XXX: TODO Make these prettier!
 mouse.mousedowners.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'blue'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#7A6BE1'});
 });
 
 mouse.mouseuppers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'red'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#111AE3'});
 });
 
 mouse.mousedraggers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'green',
-                          'radius':10});
+    addEntityWithoutName({'x':x,'y':y,'colour':'#1ECBF1',
+                          'radius':20});
 });
 
 
